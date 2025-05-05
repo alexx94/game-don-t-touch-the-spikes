@@ -1,0 +1,153 @@
+20/11/2024
+Facem Don't Touch The Spikes in java, copie la ce am facut in Python cu pygame, 
+dar aproape un an mai tarziu.
+
+De inceput avem nevoie asa in mare:
+    - frame cu urmatoarele {
+        - printam background pe ecran;
+        - butoane start, exit
+        - optiune de selectare pasare (de inceput o bila, apoi poze cu pasarea .png)
+        - scor care se actualizeaza pe ecran in timp real ca text pe mijloc 
+    }
+    - clasa cu pasarea {
+        - instanta pasarii/bilei
+        - logica sa se deplaseze by default spre una dintre directii (left/right)
+        - atunci cand ajunge la final de border pe orizontal, sa schimbe directia
+        - handle input pentru UP_KEY sa zboare mai sus (handle la logica de zburat sa nu fie
+          instanta, dar sa fie pe frame-uri ca sa arate bine dpdv vizual, la fel si la directie)
+        - handle la coliziune cu tepii din joc (de data asta sa fie forma triunghiulara, nu drepti)
+        - functie de generare random a tepilor pe harta
+        - viteza sa creasca din 5 in 5 /10 in 10
+        - actualizarea backgroundului la fiecare +10 puncte pana la scor = 100
+        - corectat posibile buguri cu movement-ul pasarii, in special out of bounds, 
+          sau cand atinge upper/lower bounds al ecranului sa nu iasa din el ci sa se mentina acolo,
+          cumva limitat la ce poate parcurge pasarea  
+    }
+
+    *** asta e ideea de baza, eventual sa mai adaug si bomboane generate random pe ecran cu o imagine,
+    (asemanator cu merele de la snake generarea), si colectarea lor sa creasca scorul cu 1;
+    colectarea bomboanelor sa permita achizitionarea de alte culori, lucruri customizabile ale 
+    caracterului, pe care sa le adaug in meniu (lista de pasari).
+    
+    lista de pasari deblocate din meniu sa apara intr-un fisier de tip json/txt, ceva gen:
+    'balance=x' x fiind nr. de bomboane curente;
+    
+    iar la pasarile deblocate o lista cu fiecare gen:
+    {
+     pasarea_nr1=1,
+     pasarea_nr2=1,
+     pasarea_nr3=0,
+     etc.
+    } 1 inseamna ca e deblocata, deci sa poata fi selectata, iar 0 sa apara ca locked,
+    iar daca dai pe butonul lock si ai destule bomboane, poti debloca, de ex 
+    sa coste 10 bomboane per skin de pasare.
+
+    *** Cam asta ar fi un mic brainstorm la cum sa fie joculetul, hai sa trecem la treaba acuma
+    
+
+    BABY STEPS TASKS:
+     - make window frame
+     - make a bird/ball 
+     - make the character move in a straight line to the right
+     - make the character hit bounds limit and stop
+     - make the character change directions once it hits bounds
+     DONE IN AROUND 1H maybe a bit more but finally understood these things again
+     and was able to finish the baby steps
+
+    STEP NUMERO 2:
+     - adding movement vertically from the bird/ball
+     - adding user input movement to make the bird fly upwards
+     - making sure the bird can easily move around the map without any issues
+     DONE in around 1.5h-2h, had to learn about gravity again, but managed to implement it
+     just fine after a lil youtube tutorial on gravity. 
+    
+    STEP NO 3:
+     - adding spikes to the game (maybe make them triangle shape)
+     - add collision with spikes
+     - creating random side wall spike generating algorithm that doesnt interfere with bird/ball
+     - add permanent spikes top and bottom of the screen
+
+    21/11/2024 - facem intai step no 3 si vedem dupa ce mai bagam
+    gata de generat tepii, ca triunghiuri (poligoane de 3) in functie de cat permite spatiul
+    in partea de sus si jos. urmeaza coliziunea cu astia, apoi generarea pe pereti in mod random
+
+        - azi am incercat cu tepii dar nu a iesit exact cum am vrut, am facut in rest scorul si cresterea
+          vitezei caracterului in functie de scorul jucatorului, si am modifica niste chestii legate de limitele
+          ferestrei in raport cu modul de deplasare al caracterului
+        - am adaugat coliziune cu tepii, sa dea freeze la ecran (game over)
+    
+    STEP 4:
+     - add spikes on side walls, care sa fie generati random asa cum trebuie
+     - interfata cu meniu de unde user-ul poate selecta alte culori la minge
+     - de ordonat codul sa fie mai modular, impartit in mai multe clase specifice etc. acolo unde pot si e cazul
+
+    23/11/2024 - facem step 4, aproape tot e gata, am facut o logica buna de generare de tepi pe ambele parti in mod
+                  eficient, urmeaza acum sa schimbam backgroundul odata cu scorul, sa adaugam meniul, 
+                  si sa revizuim codul sa fie clean si in regula
+                
+                - am adaugat doar tepii sa mearga bine, schimbarea de background si m-am interesat de o optimizare,
+                  dar pe care nu am facut-o pentru ca insemna destul de multa munca, si fiind si presat de timp si 
+                  scoala si altele nu o voi implementa acum, ci poate pe viitor
+    
+    STEP 5:
+      - Adaugat meniu principal, cu buton play, select bird color, afisare BEST SCORE
+      - ecran cu GAME OVER, scorul actual, si best score-ul dupa ce are loc coliziunea, si returnarea pe meniul principal
+      - verificarea codului si finisarea overall a jocului
+
+    24/11/2024 - Am facut meniul, tot in afara de selectarea culorii
+               - NU MERGE SA SCHIMB DE PE MENIU, PE PAGINA CU GAMEPANEL !!!!********************************* 
+ 
+    25-26//11/2024 - Am implementat cu succes threads si switchPanel folosind interfate
+
+    STEP 6:
+      - Logica de resetare a jocului la valori initiale dupa GAME OVER
+      - Functii de resetGame()
+      - Actualizare fisier cu BestScore
+      - MODULAREA CODULUI unde e cazul !!!*
+
+    26/11/2024  - Am reusit dupa vreo 4 ore sa vad de ce nu se reseta asa cum trebuie jocul. 
+                  Verificarea de coliziune trebuia pusa inainte de functia move() a jocului, ca sa nu mai apeleze aproape non-stop functia checkCollision()
+                - Urmeaza sa implementez restul functionalitatilor de ResetGame() si sa verific meniurile sa mearga cum trebuie
+                - Apoi MODULARIZAREA CODULUI!
+    
+    27/11/2024  - Am rezolvat prostia aia cu schimbat paneluri si threaduri care cauza probleme, a trebuit sa scot functia resume() si sa las doar start() sa fie apelat de fiecare data
+                  cand se face switch intre paneluri, fara alta conditie, aia era deci de ajuns, muie chatgpt sa mor daca mai intreb ceva vreodata acolo ca am stat 2 ore cu el degeaba
+                - Am terminat tot jocul, merge totul cum trebuie
+                
+    STEP 7:
+      - Curatam codul de functii/comentarii si alte lucruri de care nu avem nevoie
+      - Il facem sa fie mai MODULAR, mai bun overall
+
+# struggles so far: - learning about paint, draw, Graphics g and how to implement them
+                    - using run() method from Runnable implementation
+                    - importance of having a Thread in this
+                    - remembering swing and overall process cause its been a few months <3
+        
+
+# sum ideas i learned, concepts, possible improvements: 
+        - not worth implementing at this scale,but larger scale apps/games probably
+          use for collision, instead of checking all possibilities, they divide the entire
+          thing, rendered map whatever into cells or areas and instead check collision
+          with whatever exists within the area to improve efficiency at that scale
+
+# possible imporovements:
+        - /*
+     * Facem logica de coliziune cu spike, imbunatatita de data asta, in loc sa compare hitboxurile daca se lovesc,
+     * caz in care poate avea erori pt ca noi avem un triunghi spike, nu un dreptunghi, vom face o functie mai personalizata,
+     * anume vom lua hitboxul pasarii, si vom verifica coliziunea cu cele 2 segmente determinate de laturile din triunghi
+     * cu care poate avea coliziuni, deci luam fiecare spike in parte, si verificam daca acele 2 laturi se intersecteaza
+     * cu hitboxul pasarii noastre, caz in care returnam pozitiv, cam atat
+     * pentru asta aparent nu merge intersects, si ar trebui sa fac eu ceva separat mai complex insa ar dura cam mult si nu are sens,
+     * pentru ca nu incurca atat de rau si doar in 'edge cases' poate cauza probleme, asta doar fiind o imbunatarie a experientei.
+     * 
+     * Deci update-ul ar arata asa, pt cele 2 segmente din spike, compar cu toate laturile posibile ce pornesc din centrul
+     * pasarii mele, adica toate razele cercului in care se incadreaza, si verifica cu Line2D daca linia din bird
+     * se intersecteaza cu linia din triunghi si fac asa la toate razele pe care cercul le are. Ceva de genul ar arata,
+     * asta e o implementare asa la prima vedere, sigur necesita prelucrare, dar presupun ca asta ar fi abordarea
+     */
+
+        ~~~*********~~~
+      - REDUNDANCY - sa fac o clasa care se ocupa de generarea elementelor vizuale
+                     in loc sa dau copy paste la o gramada de functii care fac acelasi lucru
+
+      - Manager de THREADS, in loc sa initializez thread in constructor
